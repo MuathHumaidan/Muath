@@ -6,561 +6,103 @@
 <title>قاموس العهد البصري</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --dark: #2a3a42;
-    --darker: #1e3040;
-    --teal: #00b5a5;
-    --teal-light: #00d4c2;
-    --blue: #2b7fa3;
-    --bg: #f4f7f9;
-    --surface: #ffffff;
-    --text: #1a2a32;
-    --muted: #7a9aaa;
-    --border: #e0eaee;
-    --red: #e05252;
-    --green: #27ae60;
-    --orange: #e08a00;
-    --shadow: 0 4px 24px rgba(42,58,66,0.10);
-    --shadow-lg: 0 8px 40px rgba(42,58,66,0.16);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    font-family: 'IBM Plex Sans Arabic', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    direction: rtl;
-  }
-
-  /* HEADER */
-  .header {
-    background: linear-gradient(135deg, var(--dark), var(--darker));
-    border-bottom: 3px solid var(--teal);
-    padding: 16px 20px 14px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .header-logo {
-    width: 36px;
-    height: 36px;
-    background: var(--teal);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .header-info h1 {
-    color: #fff;
-    font-size: 16px;
-    font-weight: 700;
-  }
-  .header-info p {
-    color: var(--teal);
-    font-size: 11px;
-    font-weight: 400;
-    margin-top: 1px;
-  }
-  .header-count {
-    margin-right: auto;
-    background: rgba(0,181,165,0.18);
-    border: 1px solid rgba(0,181,165,0.35);
-    border-radius: 20px;
-    padding: 4px 12px;
-    color: var(--teal-light);
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  /* TABS */
-  .tabs {
-    background: var(--surface);
-    display: flex;
-    border-bottom: 2px solid var(--border);
-    position: sticky;
-    top: 69px;
-    z-index: 99;
-  }
-  .tab {
-    flex: 1;
-    text-align: center;
-    padding: 13px 8px 11px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--muted);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    transition: all .2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .tab.active {
-    color: var(--teal);
-    border-bottom-color: var(--teal);
-    font-weight: 600;
-  }
-  .tab-icon { font-size: 16px; }
-
-  /* SCREENS */
-  .screen { display: none; padding: 16px; }
-  .screen.active { display: block; }
-
-  /* SCAN SCREEN */
-  .scan-hero {
-    background: linear-gradient(135deg, var(--dark), var(--darker));
-    border-radius: 20px;
-    padding: 28px 20px;
-    text-align: center;
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .scan-hero::before {
-    content: '';
-    position: absolute;
-    top: -30px; left: -30px;
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    background: rgba(0,181,165,0.08);
-  }
-  .scan-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -20px; right: -20px;
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    background: rgba(43,127,163,0.08);
-  }
-  .scan-icon {
-    font-size: 52px;
-    margin-bottom: 12px;
-    display: block;
-  }
-  .scan-hero h2 {
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .scan-hero p {
-    color: rgba(255,255,255,0.55);
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  .upload-zone {
-    border: 2.5px dashed var(--teal);
-    border-radius: 18px;
-    padding: 28px 20px;
-    text-align: center;
-    background: rgba(0,181,165,0.04);
-    cursor: pointer;
-    transition: all .25s;
-    margin-bottom: 14px;
-    position: relative;
-  }
-  .upload-zone:active { background: rgba(0,181,165,0.10); transform: scale(0.98); }
-  .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-  .upload-icon { font-size: 36px; margin-bottom: 10px; }
-  .upload-zone h3 { font-size: 15px; font-weight: 600; color: var(--teal); margin-bottom: 4px; }
-  .upload-zone p { font-size: 12px; color: var(--muted); }
-
-  #imagePreview {
-    display: none;
-    width: 100%;
-    max-height: 260px;
-    object-fit: contain;
-    border-radius: 14px;
-    border: 2px solid var(--teal);
-    margin-bottom: 14px;
-  }
-
-  /* RESULT CARD */
-  #resultCard {
-    display: none;
-    background: var(--surface);
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: var(--shadow-lg);
-    border: 1.5px solid var(--border);
-    margin-bottom: 14px;
-    animation: slideUp .35s ease;
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .result-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1.5px solid var(--border);
-  }
-  .result-badge {
-    width: 40px; height: 40px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-  .result-badge.known { background: rgba(0,181,165,0.12); }
-  .result-badge.unknown { background: rgba(224,82,82,0.10); }
-  .result-title { font-size: 15px; font-weight: 700; }
-  .result-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-  .result-field {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    align-items: flex-start;
-  }
-  .result-label {
-    min-width: 90px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    padding-top: 3px;
-    flex-shrink: 0;
-  }
-  .result-value {
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 500;
-    flex: 1;
-  }
-
-  .confidence-bar {
-    height: 6px;
-    background: var(--border);
-    border-radius: 10px;
-    margin-top: 12px;
-    overflow: hidden;
-  }
-  .confidence-fill {
-    height: 100%;
-    border-radius: 10px;
-    background: linear-gradient(90deg, var(--teal), var(--teal-light));
-    transition: width .6s ease;
-  }
-  .confidence-label {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-    text-align: left;
-  }
-
-  /* BUTTONS */
-  .btn {
-    width: 100%;
-    padding: 15px;
-    border-radius: 14px;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all .2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--teal), #009e8f);
-    color: #fff;
-    box-shadow: 0 4px 16px rgba(0,181,165,0.30);
-  }
-  .btn-secondary {
-    background: var(--surface);
-    color: var(--dark);
-    border: 2px solid var(--border);
-  }
-  .btn-danger {
-    background: rgba(224,82,82,0.08);
-    color: var(--red);
-    border: 1.5px solid rgba(224,82,82,0.25);
-  }
-  .btn:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-  }
-
-  /* LOADING */
-  .loading-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(26,42,50,0.75);
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .loading-overlay.show { display: flex; }
-  .spinner {
-    width: 52px; height: 52px;
-    border: 4px solid rgba(0,181,165,0.3);
-    border-top: 4px solid var(--teal);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { color: #fff; font-size: 15px; font-weight: 500; }
-
-  /* INVENTORY SCREEN */
-  .search-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .search-input {
-    flex: 1;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--text);
-    outline: none;
-    transition: border-color .2s;
-    direction: rtl;
-  }
-  .search-input:focus { border-color: var(--teal); }
-
-  .stats-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .stat-card {
-    background: var(--surface);
-    border-radius: 14px;
-    padding: 14px 10px;
-    text-align: center;
-    border: 1.5px solid var(--border);
-    box-shadow: var(--shadow);
-  }
-  .stat-number {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--teal);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  .items-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .item-card {
-    background: var(--surface);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1.5px solid var(--border);
-    box-shadow: var(--shadow);
-    cursor: pointer;
-    transition: all .2s;
-    animation: fadeIn .3s ease;
-  }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .item-card:active { transform: scale(0.97); border-color: var(--teal); }
-  .item-img {
-    width: 100%;
-    height: 110px;
-    object-fit: cover;
-    background: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-    color: var(--muted);
-  }
-  .item-img img { width: 100%; height: 100%; object-fit: cover; }
-  .item-info { padding: 10px; }
-  .item-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .item-employee {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .item-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 20px;
-  }
-  .status-good { background: rgba(39,174,96,0.12); color: var(--green); }
-  .status-damaged { background: rgba(224,82,82,0.10); color: var(--red); }
-  .status-ok { background: rgba(224,138,0,0.10); color: var(--orange); }
-
-  .empty-state {
-    text-align: center;
-    padding: 50px 20px;
-    color: var(--muted);
-  }
-  .empty-icon { font-size: 52px; margin-bottom: 12px; }
-  .empty-state h3 { font-size: 16px; margin-bottom: 6px; color: var(--dark); }
-  .empty-state p { font-size: 13px; line-height: 1.6; }
-
-  /* MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(26,42,50,0.65);
-    z-index: 500;
-    animation: fadeInBg .2s ease;
-  }
-  @keyframes fadeInBg { from { opacity: 0; } to { opacity: 1; } }
-  .modal-overlay.show { display: flex; align-items: flex-end; }
-  .modal {
-    background: var(--surface);
-    border-radius: 24px 24px 0 0;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 20px;
-    animation: slideUpModal .3s ease;
-  }
-  @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-handle {
-    width: 44px; height: 5px;
-    background: var(--border);
-    border-radius: 10px;
-    margin: 0 auto 18px;
-  }
-  .modal-img {
-    width: 100%;
-    max-height: 200px;
-    object-fit: contain;
-    border-radius: 14px;
-    background: var(--bg);
-    margin-bottom: 16px;
-    border: 1.5px solid var(--border);
-  }
-  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-  .modal-id { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
-  .modal-field { margin-bottom: 14px; }
-  .modal-field label {
-    display: block;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    margin-bottom: 5px;
-  }
-  .modal-field-value {
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 500;
-    background: var(--bg);
-    border-radius: 10px;
-    padding: 10px 12px;
-  }
-
-  /* ADD FORM */
-  .form-field { margin-bottom: 14px; }
-  .form-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 6px;
-  }
-  .form-input, .form-select, .form-textarea {
-    width: 100%;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--text);
-    outline: none;
-    transition: border-color .2s;
-    direction: rtl;
-    appearance: none;
-  }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--teal); }
-  .form-textarea { min-height: 80px; resize: vertical; }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 90px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--dark);
-    color: #fff;
-    padding: 12px 22px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    opacity: 0;
-    transition: all .3s;
-    z-index: 9999;
-    white-space: nowrap;
-    border: 1.5px solid rgba(0,181,165,0.3);
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* BOTTOM NAV spacer */
-  .bottom-spacer { height: 20px; }
+:root{--dark:#2a3a42;--darker:#1e3040;--teal:#00b5a5;--teal-l:#00d4c2;--bg:#f4f7f9;--surface:#ffffff;--text:#1a2a32;--muted:#7a9aaa;--border:#e0eaee;--red:#e05252;--green:#27ae60;--orange:#e08a00;--shadow:0 4px 24px rgba(42,58,66,.10);--shadow-lg:0 8px 40px rgba(42,58,66,.16)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
+.header{background:linear-gradient(135deg,var(--dark),var(--darker));border-bottom:3px solid var(--teal);padding:16px 20px 14px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px}
+.header-logo{width:36px;height:36px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.header-info h1{color:#fff;font-size:16px;font-weight:700}
+.header-info p{color:var(--teal);font-size:11px;margin-top:1px}
+.header-count{margin-right:auto;background:rgba(0,181,165,.18);border:1px solid rgba(0,181,165,.35);border-radius:20px;padding:4px 12px;color:var(--teal-l);font-size:12px;font-weight:600}
+.tabs{background:var(--surface);display:flex;border-bottom:2px solid var(--border);position:sticky;top:69px;z-index:99}
+.tab{flex:1;text-align:center;padding:13px 8px 11px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:600}
+.screen{display:none;padding:16px}
+.screen.active{display:block}
+.scan-hero{background:linear-gradient(135deg,var(--dark),var(--darker));border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:16px}
+.scan-hero span{font-size:48px;display:block;margin-bottom:10px}
+.scan-hero h2{color:#fff;font-size:18px;font-weight:700;margin-bottom:6px}
+.scan-hero p{color:rgba(255,255,255,.5);font-size:13px;line-height:1.6}
+.upload-zone{border:2.5px dashed var(--teal);border-radius:18px;padding:28px 20px;text-align:center;background:rgba(0,181,165,.04);cursor:pointer;margin-bottom:12px;position:relative;transition:all .2s}
+.upload-zone:active{background:rgba(0,181,165,.10)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:36px;margin-bottom:8px}
+.upload-zone h3{font-size:15px;font-weight:600;color:var(--teal);margin-bottom:4px}
+.upload-zone p{font-size:12px;color:var(--muted)}
+#imagePreview{display:none;width:100%;max-height:260px;object-fit:contain;border-radius:14px;border:2px solid var(--teal);margin-bottom:12px}
+#resultCard{display:none;background:var(--surface);border-radius:18px;padding:20px;box-shadow:var(--shadow-lg);border:1.5px solid var(--border);margin-bottom:12px;animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.result-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1.5px solid var(--border)}
+.result-badge{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.result-badge.known{background:rgba(0,181,165,.12)}
+.result-badge.unknown{background:rgba(224,82,82,.10)}
+.result-title{font-size:15px;font-weight:700}
+.result-subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+.result-field{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start}
+.result-label{min-width:88px;font-size:11px;font-weight:600;color:var(--muted);padding-top:2px;flex-shrink:0}
+.result-value{font-size:14px;color:var(--text);font-weight:500;flex:1}
+.cbar{height:6px;background:var(--border);border-radius:10px;margin-top:10px;overflow:hidden}
+.cfill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--teal),var(--teal-l));transition:width .6s ease}
+.clbl{font-size:11px;color:var(--muted);margin-top:4px}
+.btn{width:100%;padding:15px;border-radius:14px;font-family:inherit;font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--teal),#009e8f);color:#fff;box-shadow:0 4px 16px rgba(0,181,165,.30)}
+.btn-secondary{background:var(--surface);color:var(--dark);border:2px solid var(--border)}
+.btn-danger{background:rgba(224,82,82,.08);color:var(--red);border:1.5px solid rgba(224,82,82,.25)}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(26,42,50,.75);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.loading-overlay.show{display:flex}
+.spinner{width:52px;height:52px;border:4px solid rgba(0,181,165,.3);border-top:4px solid var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:#fff;font-size:15px;font-weight:500}
+.search-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-family:inherit;font-size:14px;color:var(--text);outline:none;direction:rtl;margin-bottom:16px}
+.search-input:focus{border-color:var(--teal)}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.stat-card{background:var(--surface);border-radius:14px;padding:14px 10px;text-align:center;border:1.5px solid var(--border)}
+.stat-number{font-size:22px;font-weight:700;color:var(--teal);line-height:1}
+.stat-label{font-size:11px;color:var(--muted);margin-top:4px}
+.items-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.item-card{background:var(--surface);border-radius:16px;overflow:hidden;border:1.5px solid var(--border);cursor:pointer;transition:all .2s}
+.item-card:active{transform:scale(.97);border-color:var(--teal)}
+.item-img{width:100%;height:110px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--muted)}
+.item-img img{width:100%;height:100%;object-fit:cover}
+.item-info{padding:10px}
+.item-name{font-size:13px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-employee{font-size:11px;color:var(--muted);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-status{display:inline-flex;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
+.status-good{background:rgba(39,174,96,.12);color:var(--green)}
+.status-damaged{background:rgba(224,82,82,.10);color:var(--red)}
+.status-ok{background:rgba(224,138,0,.10);color:var(--orange)}
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty-icon{font-size:52px;margin-bottom:12px}
+.empty-state h3{font-size:16px;margin-bottom:6px;color:var(--dark)}
+.form-field{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--dark);margin-bottom:6px}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-family:inherit;font-size:14px;color:var(--text);outline:none;direction:rtl;appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--teal)}
+.form-textarea{min-height:80px;resize:vertical}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,42,50,.65);z-index:500}
+.modal-overlay.show{display:flex;align-items:flex-end}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-height:90vh;overflow-y:auto;padding:20px;animation:slideUpModal .3s ease}
+@keyframes slideUpModal{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:44px;height:5px;background:var(--border);border-radius:10px;margin:0 auto 18px}
+.modal-img{width:100%;max-height:200px;object-fit:contain;border-radius:14px;background:var(--bg);margin-bottom:16px;border:1.5px solid var(--border)}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.modal-id{font-size:12px;color:var(--muted);margin-bottom:16px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.modal-field-value{font-size:14px;color:var(--text);background:var(--bg);border-radius:10px;padding:10px 12px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:12px 22px;border-radius:100px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:9999;white-space:nowrap;border:1.5px solid rgba(0,181,165,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
   <div class="loading-text" id="loadingText">جاري التحليل...</div>
 </div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- HEADER -->
 <div class="header">
   <div class="header-logo">🗂️</div>
   <div class="header-info">
@@ -570,36 +112,25 @@
   <div class="header-count" id="headerCount">0 صنف</div>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('scan')" id="tab-scan">
-    <span class="tab-icon">📷</span> مسح
-  </div>
-  <div class="tab" onclick="switchTab('inventory')" id="tab-inventory">
-    <span class="tab-icon">📦</span> القاموس
-  </div>
-  <div class="tab" onclick="switchTab('add')" id="tab-add">
-    <span class="tab-icon">➕</span> إضافة
-  </div>
+  <div class="tab active" onclick="switchTab('scan')" id="tab-scan">📷 مسح</div>
+  <div class="tab" onclick="switchTab('inventory')" id="tab-inventory">📦 القاموس</div>
+  <div class="tab" onclick="switchTab('add')" id="tab-add">➕ إضافة</div>
 </div>
 
-<!-- SCAN SCREEN -->
 <div class="screen active" id="screen-scan">
   <div class="scan-hero">
-    <span class="scan-icon">🔍</span>
-    <h2>تعرف على الصنف من صورته</h2>
-    <p>صوّر أي عهدة وسيقارنها الذكاء الاصطناعي<br>مع قاموسك المحفوظ</p>
+    <span>🔍</span>
+    <h2>صوّر الصنف وسيتعرف عليه</h2>
+    <p>يحلل الذكاء الاصطناعي الصورة مباشرةً<br>ويبحث عنها في قاموسك المحفوظ</p>
   </div>
-
-  <div class="upload-zone" id="uploadZone" onclick="document.getElementById('scanInput').click()">
+  <div class="upload-zone" id="uploadZone">
     <input type="file" id="scanInput" accept="image/*" capture="environment" onchange="handleScanImage(event)">
     <div class="upload-icon">📸</div>
-    <h3>اضغط للتصوير أو رفع صورة</h3>
-    <p>سيتعرف النظام على الصنف تلقائياً</p>
+    <h3>اضغط للتصوير</h3>
+    <p>الصورة تُحلَّل بالذكاء الاصطناعي مباشرةً</p>
   </div>
-
-  <img id="imagePreview" alt="معاينة الصورة">
-
+  <img id="imagePreview" alt="">
   <div id="resultCard">
     <div class="result-header">
       <div class="result-badge" id="resultBadge">🎯</div>
@@ -609,97 +140,47 @@
       </div>
     </div>
     <div id="resultFields"></div>
-    <div class="confidence-bar">
-      <div class="confidence-fill" id="confidenceFill" style="width:0%"></div>
-    </div>
-    <div class="confidence-label" id="confidenceLabel"></div>
+    <div class="cbar"><div class="cfill" id="confidenceFill" style="width:0%"></div></div>
+    <div class="clbl" id="confidenceLabel"></div>
   </div>
-
-  <button class="btn btn-secondary" id="btnReset" onclick="resetScan()" style="display:none">
-    🔄 مسح جديد
-  </button>
-
-  <div class="bottom-spacer"></div>
+  <button class="btn btn-secondary" id="btnReset" onclick="resetScan()" style="display:none">🔄 مسح جديد</button>
 </div>
 
-<!-- INVENTORY SCREEN -->
 <div class="screen" id="screen-inventory">
-  <div class="search-bar">
-    <input class="search-input" type="text" placeholder="🔍 ابحث عن صنف..." id="searchInput" oninput="renderInventory()">
-  </div>
-
+  <input class="search-input" type="text" placeholder="🔍 ابحث عن صنف..." id="searchInput" oninput="renderInventory()">
   <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-number" id="statTotal">0</div>
-      <div class="stat-label">إجمالي</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number" id="statGood" style="color:var(--green)">0</div>
-      <div class="stat-label">جيدة</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number" id="statDamaged" style="color:var(--red)">0</div>
-      <div class="stat-label">تالفة</div>
-    </div>
+    <div class="stat-card"><div class="stat-number" id="statTotal">0</div><div class="stat-label">إجمالي</div></div>
+    <div class="stat-card"><div class="stat-number" id="statGood" style="color:var(--green)">0</div><div class="stat-label">جيدة</div></div>
+    <div class="stat-card"><div class="stat-number" id="statDamaged" style="color:var(--red)">0</div><div class="stat-label">تالفة</div></div>
   </div>
-
   <div class="items-grid" id="itemsGrid"></div>
-  <div class="bottom-spacer"></div>
 </div>
 
-<!-- ADD SCREEN -->
 <div class="screen" id="screen-add">
-  <div class="upload-zone" id="addUploadZone" onclick="document.getElementById('addInput').click()">
+  <div class="upload-zone" id="addUploadZone">
     <input type="file" id="addInput" accept="image/*" capture="environment" onchange="handleAddImage(event)">
-    <div class="upload-icon" id="addUploadIcon">📷</div>
-    <h3 id="addUploadTitle">صوّر الصنف</h3>
-    <p id="addUploadSub">اضغط لالتقاط صورة للعهدة الجديدة</p>
+    <div class="upload-icon">📷</div>
+    <h3>صوّر الصنف</h3>
+    <p>اضغط لالتقاط صورة</p>
   </div>
   <img id="addImagePreview" style="display:none;width:100%;max-height:200px;object-fit:contain;border-radius:14px;border:2px solid var(--teal);margin-bottom:14px;" alt="">
-
-  <button class="btn btn-secondary" id="btnAutoFill" onclick="autoFillFromImage()" style="display:none;margin-bottom:16px;">
-    ✨ تعبئة تلقائية بالذكاء الاصطناعي
-  </button>
-
-  <div class="form-field">
-    <label class="form-label">اسم الصنف *</label>
-    <input class="form-input" id="fName" placeholder="مثال: طابعة HP LaserJet 1020">
-  </div>
-  <div class="form-field">
-    <label class="form-label">التعريف / الوصف</label>
-    <textarea class="form-textarea" id="fDesc" placeholder="وصف مختصر للصنف وميزاته..."></textarea>
-  </div>
-  <div class="form-field">
-    <label class="form-label">الموظف المسؤول</label>
-    <input class="form-input" id="fEmployee" placeholder="اسم الموظف">
-  </div>
-  <div class="form-field">
-    <label class="form-label">الرقم التسلسلي</label>
-    <input class="form-input" id="fSerial" placeholder="رقم العهدة أو الباركود">
-  </div>
-  <div class="form-field">
-    <label class="form-label">القسم</label>
-    <input class="form-input" id="fDept" placeholder="مثال: قسم الحاسب الآلي">
-  </div>
-  <div class="form-field">
-    <label class="form-label">الحالة</label>
+  <div class="form-field"><label class="form-label">اسم الصنف *</label><input class="form-input" id="fName" placeholder="مثال: طابعة HP LaserJet 1020"></div>
+  <div class="form-field"><label class="form-label">الوصف</label><textarea class="form-textarea" id="fDesc" placeholder="وصف مختصر..."></textarea></div>
+  <div class="form-field"><label class="form-label">الموظف المسؤول</label><input class="form-input" id="fEmployee" placeholder="اسم الموظف"></div>
+  <div class="form-field"><label class="form-label">الرقم التسلسلي</label><input class="form-input" id="fSerial" placeholder="رقم العهدة"></div>
+  <div class="form-field"><label class="form-label">القسم</label><input class="form-input" id="fDept" placeholder="مثال: قسم الحاسب الآلي"></div>
+  <div class="form-field"><label class="form-label">الحالة</label>
     <select class="form-select" id="fCondition">
       <option value="جيدة">✅ جيدة</option>
       <option value="مقبولة">⚠️ مقبولة</option>
       <option value="تالفة">❌ تالفة</option>
     </select>
   </div>
-  <div class="form-field">
-    <label class="form-label">تاريخ الاستلام</label>
-    <input class="form-input" id="fDate" type="date">
-  </div>
-
+  <div class="form-field"><label class="form-label">تاريخ الاستلام</label><input class="form-input" id="fDate" type="date"></div>
   <button class="btn btn-primary" onclick="saveItem()">💾 حفظ في القاموس</button>
-  <button class="btn btn-secondary" onclick="clearForm()">🗑️ مسح الحقول</button>
-  <div class="bottom-spacer"></div>
+  <button class="btn btn-secondary" onclick="clearForm()">🗑️ مسح</button>
 </div>
 
-<!-- DETAIL MODAL -->
 <div class="modal-overlay" id="detailModal" onclick="closeModal()">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -707,413 +188,170 @@
     <div class="modal-title" id="modalTitle"></div>
     <div class="modal-id" id="modalId"></div>
     <div id="modalFields"></div>
-    <button class="btn btn-danger" id="btnDelete" onclick="deleteItem()">🗑️ حذف من القاموس</button>
+    <button class="btn btn-danger" onclick="deleteItem()">🗑️ حذف من القاموس</button>
   </div>
 </div>
 
 <script>
-// ── STATE ──────────────────────────────────────────────
+const API_KEY = 'AIzaSyBxZqhskRG7udGuZP9xD69CEGpVhkJU3LU';
 let items = JSON.parse(localStorage.getItem('tvtc_assets') || '[]');
-let addImageData = null;
-let scanImageData = null;
-let currentDetailId = null;
+let addImageData = null, currentDetailId = null;
 
-// ── TABS ───────────────────────────────────────────────
-function switchTab(name) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  document.getElementById('tab-' + name).classList.add('active');
-  if (name === 'inventory') renderInventory();
+document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+updateHeaderCount();
+
+function switchTab(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('screen-'+n).classList.add('active');
+  document.getElementById('tab-'+n).classList.add('active');
+  if(n==='inventory') renderInventory();
   updateHeaderCount();
 }
-
-function updateHeaderCount() {
-  document.getElementById('headerCount').textContent = items.length + ' صنف';
+function updateHeaderCount(){
+  document.getElementById('headerCount').textContent=items.length+' صنف';
 }
-
-// ── SCAN ───────────────────────────────────────────────
-function handleScanImage(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    scanImageData = ev.target.result;
-    const preview = document.getElementById('imagePreview');
-    preview.src = scanImageData;
-    preview.style.display = 'block';
-    document.getElementById('uploadZone').style.display = 'none';
-    recognizeAsset();
+function handleScanImage(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const d=ev.target.result;
+    document.getElementById('imagePreview').src=d;
+    document.getElementById('imagePreview').style.display='block';
+    document.getElementById('uploadZone').style.display='none';
+    recognize(d);
   };
   reader.readAsDataURL(file);
 }
-
-async function recognizeAsset() {
+async function recognize(dataUrl){
   showLoading('جاري تحليل الصورة...');
-  const resultCard = document.getElementById('resultCard');
-  resultCard.style.display = 'none';
-
-  const catalogJson = JSON.stringify(items.map(i => ({
-    id: i.id, name: i.name, description: i.description,
-    category: i.dept, condition: i.condition
-  })));
-
-  const hasItems = items.length > 0;
-
-  const systemPrompt = hasItems
-    ? `أنت نظام تعرف على الأصناف (العهد) في مؤسسة تدريبية. لديك قاموس من الأصناف المحفوظة مسبقاً. مهمتك:
-1. تحليل الصورة المرسلة
-2. مقارنتها مع القاموس المحفوظ
-3. تحديد أقرب صنف مطابق وإعطاء نسبة ثقة
-أجب دائماً بـ JSON فقط بدون أي نص إضافي أو markdown.`
-    : `أنت خبير في تصنيف الأصناف والمعدات المكتبية. حلل الصورة وحدد:
-- نوع الصنف ومسماه
-- وصف مختصر
-- حالته الظاهرة
-أجب دائماً بـ JSON فقط بدون أي نص إضافي أو markdown.`;
-
-  const userPrompt = hasItems
-    ? `القاموس المحفوظ: ${catalogJson}
-
-حلل الصورة وأجب بهذا الـ JSON:
-{
-  "matched": true/false,
-  "matchedId": "id إن وُجد مطابق",
-  "matchedName": "اسم الصنف المطابق",
-  "confidence": 85,
-  "detectedType": "نوع الصنف من الصورة",
-  "notes": "ملاحظة إضافية",
-  "condition": "حالة الصنف الظاهرة"
-}`
-    : `حلل الصورة وأجب بهذا الـ JSON:
-{
-  "matched": false,
-  "matchedId": null,
-  "matchedName": null,
-  "confidence": 0,
-  "detectedType": "اسم ونوع الصنف",
-  "notes": "وصف مختصر",
-  "condition": "جيدة/مقبولة/تالفة"
-}`;
-
+  document.getElementById('resultCard').style.display='none';
+  const catalog=items.map(i=>({id:i.id,name:i.name,description:i.description||'',dept:i.dept||'',condition:i.condition||''}));
+  const base64=dataUrl.split(',')[1];
+  const mt=dataUrl.split(';')[0].split(':')[1];
+  const prompt=catalog.length>0
+    ? `أنت نظام تعرف على عهد مكتبية. القاموس المحفوظ: ${JSON.stringify(catalog)}\n\nحلل الصورة وأجب بـ JSON فقط بدون markdown:\n{"matched":true,"matchedId":"id أو null","matchedName":"اسم أو null","confidence":85,"detectedType":"نوع الصنف من الصورة","notes":"ملاحظة"}`
+    : `أنت خبير تصنيف أصناف ومعدات. حلل الصورة وأجب بـ JSON فقط بدون markdown:\n{"matched":false,"matchedId":null,"matchedName":null,"confidence":0,"detectedType":"اسم ونوع الصنف","notes":"وصف مختصر"}`;
   try {
-    const base64 = scanImageData.split(',')[1];
-    const mediaType = scanImageData.split(';')[0].split(':')[1];
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: userPrompt }
-          ]
-        }]
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        contents:[{parts:[
+          {inline_data:{mime_type:mt,data:base64}},
+          {text:prompt}
+        ]}],
+        generationConfig:{temperature:0.1}
       })
     });
-
-    const data = await res.json();
+    const data=await res.json();
     hideLoading();
-    const text = data.content?.map(b => b.text || '').join('').replace(/```json|```/g,'').trim();
-    const result = JSON.parse(text);
-    showScanResult(result);
-  } catch(err) {
-    hideLoading();
-    showToast('❌ حدث خطأ في التحليل');
-    resetScan();
-  }
+    if(data.error){showToast('❌ '+data.error.message);resetScan();return;}
+    const txt=data.candidates?.[0]?.content?.parts?.[0]?.text?.replace(/```json|```/g,'').trim();
+    if(!txt){showToast('❌ لم يتم الحصول على رد');resetScan();return;}
+    showResult(JSON.parse(txt));
+  } catch(err){hideLoading();showToast('❌ خطأ في الاتصال');resetScan();}
 }
-
-function showScanResult(result) {
-  const card = document.getElementById('resultCard');
-  card.style.display = 'block';
-  document.getElementById('btnReset').style.display = 'flex';
-
-  const badge = document.getElementById('resultBadge');
-  const title = document.getElementById('resultTitle');
-  const subtitle = document.getElementById('resultSubtitle');
-  const fields = document.getElementById('resultFields');
-  const fill = document.getElementById('confidenceFill');
-  const confLabel = document.getElementById('confidenceLabel');
-
-  if (result.matched && result.matchedId) {
-    const item = items.find(i => i.id == result.matchedId);
-    badge.textContent = '✅';
-    badge.className = 'result-badge known';
-    title.textContent = result.matchedName || result.detectedType;
-    subtitle.textContent = 'تم التعرف على الصنف من القاموس';
-    fill.style.width = (result.confidence || 85) + '%';
-    confLabel.textContent = 'نسبة الثقة: ' + (result.confidence || 85) + '%';
-
-    let html = '';
-    if (item) {
-      html += field('الموظف', item.employee || '—');
-      html += field('الرقم التسلسلي', item.serial || '—');
-      html += field('القسم', item.dept || '—');
-      html += field('الحالة المحفوظة', item.condition || '—');
-    }
-    if (result.notes) html += field('ملاحظة', result.notes);
-    fields.innerHTML = html;
+function showResult(r){
+  const card=document.getElementById('resultCard');
+  card.style.display='block';
+  document.getElementById('btnReset').style.display='flex';
+  const old=card.querySelector('.btn-extra'); if(old) old.remove();
+  if(r.matched&&r.matchedId){
+    const item=items.find(i=>i.id==r.matchedId);
+    document.getElementById('resultBadge').textContent='✅';
+    document.getElementById('resultBadge').className='result-badge known';
+    document.getElementById('resultTitle').textContent=r.matchedName||r.detectedType;
+    document.getElementById('resultSubtitle').textContent='تم التعرف — موجود في القاموس';
+    document.getElementById('confidenceFill').style.width=(r.confidence||85)+'%';
+    document.getElementById('confidenceLabel').textContent='نسبة الثقة: '+(r.confidence||85)+'%';
+    let h='';
+    if(item){h+=rf('الموظف',item.employee||'—');h+=rf('الرقم',item.serial||'—');h+=rf('القسم',item.dept||'—');h+=rf('الحالة',item.condition||'—');}
+    if(r.notes) h+=rf('ملاحظة',r.notes);
+    document.getElementById('resultFields').innerHTML=h;
   } else {
-    badge.textContent = '🔍';
-    badge.className = 'result-badge unknown';
-    title.textContent = result.detectedType || 'صنف غير معروف';
-    subtitle.textContent = 'هذا الصنف غير موجود في القاموس — أضفه الآن';
-    fill.style.width = '0%';
-    confLabel.textContent = 'الصنف غير مسجل في قاموسك';
-
-    let html = '';
-    if (result.notes) html += field('الوصف المقترح', result.notes);
-    if (result.condition) html += field('الحالة الظاهرة', result.condition);
-    fields.innerHTML = html;
-
-    // زر إضافة سريع
-    const addBtn = document.createElement('button');
-    addBtn.className = 'btn btn-primary';
-    addBtn.style.marginTop = '12px';
-    addBtn.innerHTML = '➕ إضافة هذا الصنف للقاموس';
-    addBtn.onclick = () => {
-      switchTab('add');
-      document.getElementById('fName').value = result.detectedType || '';
-      document.getElementById('fDesc').value = result.notes || '';
-      document.getElementById('fCondition').value = result.condition || 'جيدة';
-      if (scanImageData) {
-        addImageData = scanImageData;
-        showAddPreview(scanImageData);
-      }
-      showToast('✅ تم نقل البيانات — أكمل المعلومات');
-    };
-    card.appendChild(addBtn);
+    document.getElementById('resultBadge').textContent='🔍';
+    document.getElementById('resultBadge').className='result-badge unknown';
+    document.getElementById('resultTitle').textContent=r.detectedType||'صنف غير معروف';
+    document.getElementById('resultSubtitle').textContent='غير موجود في القاموس';
+    document.getElementById('confidenceFill').style.width='0%';
+    document.getElementById('confidenceLabel').textContent='';
+    let h=''; if(r.notes) h+=rf('الوصف',r.notes);
+    document.getElementById('resultFields').innerHTML=h;
+    const btn=document.createElement('button');
+    btn.className='btn btn-primary btn-extra';btn.style.marginTop='10px';btn.innerHTML='➕ أضف للقاموس';
+    btn.onclick=()=>{switchTab('add');document.getElementById('fName').value=r.detectedType||'';document.getElementById('fDesc').value=r.notes||'';showToast('✅ أكمل البيانات واحفظ');};
+    card.appendChild(btn);
   }
 }
-
-function field(label, value) {
-  return `<div class="result-field"><span class="result-label">${label}</span><span class="result-value">${value}</span></div>`;
+function rf(l,v){return `<div class="result-field"><span class="result-label">${l}</span><span class="result-value">${v}</span></div>`;}
+function resetScan(){
+  document.getElementById('imagePreview').style.display='none';
+  document.getElementById('uploadZone').style.display='block';
+  document.getElementById('resultCard').style.display='none';
+  document.getElementById('btnReset').style.display='none';
+  document.getElementById('scanInput').value='';
+  const old=document.getElementById('resultCard').querySelector('.btn-extra'); if(old) old.remove();
 }
-
-function resetScan() {
-  scanImageData = null;
-  document.getElementById('imagePreview').style.display = 'none';
-  document.getElementById('uploadZone').style.display = 'block';
-  document.getElementById('resultCard').style.display = 'none';
-  document.getElementById('btnReset').style.display = 'none';
-  document.getElementById('scanInput').value = '';
-  // remove any add btn appended
-  const card = document.getElementById('resultCard');
-  const extra = card.querySelector('.btn-primary');
-  if (extra) extra.remove();
-}
-
-// ── ADD ────────────────────────────────────────────────
-function handleAddImage(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    addImageData = ev.target.result;
-    showAddPreview(addImageData);
+function handleAddImage(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    addImageData=ev.target.result;
+    document.getElementById('addImagePreview').src=addImageData;
+    document.getElementById('addImagePreview').style.display='block';
+    document.getElementById('addUploadZone').style.display='none';
   };
   reader.readAsDataURL(file);
 }
-
-function showAddPreview(src) {
-  const prev = document.getElementById('addImagePreview');
-  prev.src = src;
-  prev.style.display = 'block';
-  document.getElementById('addUploadZone').style.display = 'none';
-  document.getElementById('btnAutoFill').style.display = 'flex';
+function saveItem(){
+  const name=document.getElementById('fName').value.trim();
+  if(!name){showToast('⚠️ اسم الصنف مطلوب');return;}
+  const item={id:Date.now(),name,description:document.getElementById('fDesc').value.trim(),employee:document.getElementById('fEmployee').value.trim(),serial:document.getElementById('fSerial').value.trim(),dept:document.getElementById('fDept').value.trim(),condition:document.getElementById('fCondition').value,date:document.getElementById('fDate').value,image:addImageData||null,addedAt:new Date().toLocaleDateString('ar-SA')};
+  items.unshift(item);localStorage.setItem('tvtc_assets',JSON.stringify(items));updateHeaderCount();clearForm();showToast('✅ تم الحفظ');switchTab('inventory');
 }
-
-async function autoFillFromImage() {
-  if (!addImageData) return;
-  showLoading('✨ جاري التعبئة التلقائية...');
-
-  try {
-    const base64 = addImageData.split(',')[1];
-    const mediaType = addImageData.split(';')[0].split(':')[1];
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
-        system: 'أنت خبير في تصنيف معدات وأصناف المكاتب والمؤسسات التعليمية. حلل الصورة وأعط معلومات الصنف. أجب بـ JSON فقط بدون markdown.',
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: `حلل هذا الصنف وأعطني:
-{
-  "name": "اسم الصنف الكامل",
-  "description": "وصف مختصر مفيد للتعرف عليه لاحقاً",
-  "condition": "جيدة أو مقبولة أو تالفة",
-  "category": "فئة الصنف (أثاث/أجهزة/إلكترونيات/أخرى)"
-}` }
-          ]
-        }]
-      })
-    });
-
-    const data = await res.json();
-    hideLoading();
-    const text = data.content?.map(b => b.text || '').join('').replace(/```json|```/g,'').trim();
-    const info = JSON.parse(text);
-
-    if (info.name) document.getElementById('fName').value = info.name;
-    if (info.description) document.getElementById('fDesc').value = info.description;
-    if (info.condition) document.getElementById('fCondition').value = info.condition;
-    if (info.category) document.getElementById('fDept').value = info.category;
-
-    showToast('✅ تم التعبئة التلقائية');
-  } catch(err) {
-    hideLoading();
-    showToast('❌ فشل التعبئة التلقائية');
-  }
+function clearForm(){
+  ['fName','fDesc','fEmployee','fSerial','fDept','fDate'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fCondition').value='جيدة';addImageData=null;
+  document.getElementById('addImagePreview').style.display='none';
+  document.getElementById('addUploadZone').style.display='block';
+  document.getElementById('addInput').value='';
 }
-
-function saveItem() {
-  const name = document.getElementById('fName').value.trim();
-  if (!name) { showToast('⚠️ اسم الصنف مطلوب'); return; }
-
-  const item = {
-    id: Date.now(),
-    name,
-    description: document.getElementById('fDesc').value.trim(),
-    employee: document.getElementById('fEmployee').value.trim(),
-    serial: document.getElementById('fSerial').value.trim(),
-    dept: document.getElementById('fDept').value.trim(),
-    condition: document.getElementById('fCondition').value,
-    date: document.getElementById('fDate').value,
-    image: addImageData || null,
-    addedAt: new Date().toLocaleDateString('ar-SA')
-  };
-
-  items.unshift(item);
-  localStorage.setItem('tvtc_assets', JSON.stringify(items));
-  updateHeaderCount();
-  clearForm();
-  showToast('✅ تم حفظ الصنف في القاموس');
-  switchTab('inventory');
-}
-
-function clearForm() {
-  ['fName','fDesc','fEmployee','fSerial','fDept','fDate'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('fCondition').value = 'جيدة';
-  addImageData = null;
-  document.getElementById('addImagePreview').style.display = 'none';
-  document.getElementById('addUploadZone').style.display = 'block';
-  document.getElementById('btnAutoFill').style.display = 'none';
-  document.getElementById('addInput').value = '';
-}
-
-// ── INVENTORY ──────────────────────────────────────────
-function renderInventory() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  const filtered = q
-    ? items.filter(i => (i.name + i.description + i.employee + i.serial + i.dept).toLowerCase().includes(q))
-    : items;
-
-  document.getElementById('statTotal').textContent = items.length;
-  document.getElementById('statGood').textContent = items.filter(i => i.condition === 'جيدة').length;
-  document.getElementById('statDamaged').textContent = items.filter(i => i.condition === 'تالفة').length;
-
-  const grid = document.getElementById('itemsGrid');
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-      <div class="empty-icon">📭</div>
-      <h3>${q ? 'لا توجد نتائج' : 'القاموس فارغ'}</h3>
-      <p>${q ? 'جرّب كلمة بحث مختلفة' : 'أضف أصنافك من تبويب ➕ إضافة'}</p>
-    </div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(item => {
-    const statusClass = item.condition === 'جيدة' ? 'status-good' : item.condition === 'تالفة' ? 'status-damaged' : 'status-ok';
-    const imgHtml = item.image
-      ? `<img src="${item.image}" style="width:100%;height:100%;object-fit:cover;">`
-      : `<span style="font-size:36px">📦</span>`;
-    return `<div class="item-card" onclick="showDetail(${item.id})">
-      <div class="item-img">${imgHtml}</div>
-      <div class="item-info">
-        <div class="item-name">${item.name}</div>
-        <div class="item-employee">${item.employee || 'غير محدد'}</div>
-        <span class="item-status ${statusClass}">${item.condition}</span>
-      </div>
-    </div>`;
+function renderInventory(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const f=q?items.filter(i=>(i.name+i.description+i.employee+i.serial+i.dept).toLowerCase().includes(q)):items;
+  document.getElementById('statTotal').textContent=items.length;
+  document.getElementById('statGood').textContent=items.filter(i=>i.condition==='جيدة').length;
+  document.getElementById('statDamaged').textContent=items.filter(i=>i.condition==='تالفة').length;
+  const grid=document.getElementById('itemsGrid');
+  if(!f.length){grid.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><h3>${q?'لا نتائج':'القاموس فارغ'}</h3><p>${q?'جرّب كلمة أخرى':'أضف أصنافاً من ➕'}</p></div>`;return;}
+  grid.innerHTML=f.map(i=>{
+    const pc=i.condition==='جيدة'?'status-good':i.condition==='تالفة'?'status-damaged':'status-ok';
+    const img=i.image?`<img src="${i.image}">`:'📦';
+    return `<div class="item-card" onclick="showDetail(${i.id})"><div class="item-img">${img}</div><div class="item-info"><div class="item-name">${i.name}</div><div class="item-employee">${i.employee||'غير محدد'}</div><span class="item-status ${pc}">${i.condition}</span></div></div>`;
   }).join('');
 }
-
-// ── DETAIL MODAL ───────────────────────────────────────
-function showDetail(id) {
-  const item = items.find(i => i.id == id);
-  if (!item) return;
-  currentDetailId = id;
-
-  const img = document.getElementById('modalImg');
-  if (item.image) { img.src = item.image; img.style.display = 'block'; }
-  else img.style.display = 'none';
-
-  document.getElementById('modalTitle').textContent = item.name;
-  document.getElementById('modalId').textContent = item.serial ? `# ${item.serial}` : `أُضيف: ${item.addedAt}`;
-
-  const fields = [
-    ['الوصف', item.description],
-    ['الموظف المسؤول', item.employee],
-    ['الرقم التسلسلي', item.serial],
-    ['القسم', item.dept],
-    ['الحالة', item.condition],
-    ['تاريخ الاستلام', item.date],
-    ['تاريخ الإضافة', item.addedAt],
-  ].filter(([,v]) => v);
-
-  document.getElementById('modalFields').innerHTML = fields.map(([l,v]) =>
-    `<div class="modal-field"><label>${l}</label><div class="modal-field-value">${v}</div></div>`
-  ).join('');
-
+function showDetail(id){
+  const item=items.find(i=>i.id==id); if(!item) return;
+  currentDetailId=id;
+  const mi=document.getElementById('modalImg');
+  if(item.image){mi.src=item.image;mi.style.display='block';}else{mi.style.display='none';}
+  document.getElementById('modalTitle').textContent=item.name;
+  document.getElementById('modalId').textContent=item.serial?'# '+item.serial:'أُضيف: '+item.addedAt;
+  const flds=[['الوصف',item.description],['الموظف',item.employee],['الرقم التسلسلي',item.serial],['القسم',item.dept],['الحالة',item.condition],['تاريخ الاستلام',item.date]].filter(([,v])=>v);
+  document.getElementById('modalFields').innerHTML=flds.map(([l,v])=>`<div class="modal-field"><label>${l}</label><div class="modal-field-value">${v}</div></div>`).join('');
   document.getElementById('detailModal').classList.add('show');
 }
-
-function closeModal() {
-  document.getElementById('detailModal').classList.remove('show');
-  currentDetailId = null;
+function closeModal(){document.getElementById('detailModal').classList.remove('show');currentDetailId=null;}
+function deleteItem(){
+  if(!currentDetailId||!confirm('حذف هذا الصنف؟')) return;
+  items=items.filter(i=>i.id!=currentDetailId);
+  localStorage.setItem('tvtc_assets',JSON.stringify(items));
+  updateHeaderCount();closeModal();renderInventory();showToast('🗑️ تم الحذف');
 }
-
-function deleteItem() {
-  if (!currentDetailId) return;
-  if (!confirm('هل تريد حذف هذا الصنف من القاموس؟')) return;
-  items = items.filter(i => i.id != currentDetailId);
-  localStorage.setItem('tvtc_assets', JSON.stringify(items));
-  updateHeaderCount();
-  closeModal();
-  renderInventory();
-  showToast('🗑️ تم حذف الصنف');
-}
-
-// ── UTILS ──────────────────────────────────────────────
-function showLoading(text) {
-  document.getElementById('loadingText').textContent = text || 'جاري التحليل...';
-  document.getElementById('loadingOverlay').classList.add('show');
-}
-function hideLoading() {
-  document.getElementById('loadingOverlay').classList.remove('show');
-}
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ── INIT ───────────────────────────────────────────────
-updateHeaderCount();
-// Set today as default date
-document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+function showLoading(t){document.getElementById('loadingText').textContent=t||'جاري التحليل...';document.getElementById('loadingOverlay').classList.add('show');}
+function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show');}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 </script>
 </body>
 </html>
